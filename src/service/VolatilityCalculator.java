@@ -1,3 +1,5 @@
+package service;
+import model.StockData;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +10,8 @@ public class VolatilityCalculator {
 
         // Step 1: Calculate returns
         for (int i = 1; i < data.size(); i++) {
-            double today = data.get(i).price;
-            double yesterday = data.get(i - 1).price;
+            double today = data.get(i).getPrice();
+            double yesterday = data.get(i - 1).getPrice();
 
             double ret = (today - yesterday) / yesterday;
             returns.add(ret);

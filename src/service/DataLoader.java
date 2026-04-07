@@ -1,3 +1,5 @@
+package service;
+import model.StockData;
 import java.io.*;
 import java.util.*;
 
