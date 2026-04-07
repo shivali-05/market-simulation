@@ -51,8 +51,13 @@ public class Simulator {
         double finalValue = trader.getTotalValue(
                 prices.get(prices.size() - 1));
 
+        double initial = 1000;
+        double profitPercent = ((finalValue - initial) / initial) * 100;
+
         System.out.println("\n--- SIMULATION RESULT ---");
         System.out.println("Total Trades: " + trades);
         System.out.println("Final Portfolio Value: " + finalValue);
+        System.out.println("Return %: " +
+                String.format("%.2f", profitPercent) + "%");
     }
 }
