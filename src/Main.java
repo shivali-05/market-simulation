@@ -22,13 +22,13 @@ public class Main {
             double ret = (today - yesterday) / yesterday;
             returns.add(ret);
 
-            String pattern = PatternDetector.detect(ret);
+            // String pattern = PatternDetector.detect(ret);
 
-            String date = data.get(i).getDate();
+            // String date = data.get(i).getDate();
 
-            System.out.println(date + " | " +
-                    String.format("%.4f", ret) +
-                    " | " + pattern);
+            // System.out.println(date + " | " +
+            //         String.format("%.4f", ret) +
+            //         " | " + pattern);
         }
 
         SummaryGenerator.generate(returns);

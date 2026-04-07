@@ -39,6 +39,8 @@ public class DataLoader {
                 ));
             }
 
+            br.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
