@@ -35,11 +35,11 @@ public class Simulator {
 
             if (i - lastTrade < cooldown) continue;
 
-            if (v > 0.025) {
+            if (v > 0.04) {
 
-                if (pattern.equals("SPIKE")) {
+                if (pattern.equals("CRASH")) {
 
-                    trader.buy(price * (1 + cost));
+                    trader.buy(price * (1 + cost)); //buy low
                     lastTrade = i;
                     trades++;
 
@@ -49,9 +49,9 @@ public class Simulator {
                             .append("\n");
                 }
 
-                else if (pattern.equals("CRASH")) {
+                else if (pattern.equals("SPIKE")) {
 
-                    trader.sell(price * (1 - cost));
+                    trader.sell(price * (1 - cost)); //sell high
                     lastTrade = i;
                     trades++;
 
