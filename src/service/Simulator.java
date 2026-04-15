@@ -5,10 +5,10 @@ import java.util.*;
 
 public class Simulator {
 
-    public static void run(List<Double> returns,
-                           List<Double> vol,
-                           List<Double> prices,
-                           List<String> dates) {
+    public static Map<String, Object> run(List<Double> returns,
+                                          List<Double> vol,
+                                          List<Double> prices,
+                                          List<String> dates) {
 
         Trader trader = new Trader();
 
@@ -16,7 +16,10 @@ public class Simulator {
         int cooldown = 3;
         int lastTrade = -cooldown;
 
-        double cost = 0.001; // 0.1% transaction cost
+        double cost = 0.001;
+
+        StringBuilder output = new StringBuilder();
+        List<Double> portfolioValues = new ArrayList<>();
 
         for (int i = 0; i < vol.size(); i++) {
 
@@ -27,9 +30,12 @@ public class Simulator {
 
             String pattern = PatternDetector.detect(r);
 
+            // track portfolio value
+            portfolioValues.add(trader.getTotalValue(price));
+
             if (i - lastTrade < cooldown) continue;
 
-            if (v > 0.025) { // stricter volatility threshold
+            if (v > 0.025) {
 
                 if (pattern.equals("SPIKE")) {
 
@@ -37,9 +43,10 @@ public class Simulator {
                     lastTrade = i;
                     trades++;
 
-                    System.out.println(date +
-                            " | HIGH VOL + SPIKE → BUY at " +
-                            String.format("%.2f", price));
+                    output.append(date)
+                            .append(" | BUY at ")
+                            .append(String.format("%.2f", price))
+                            .append("\n");
                 }
 
                 else if (pattern.equals("CRASH")) {
@@ -48,21 +55,29 @@ public class Simulator {
                     lastTrade = i;
                     trades++;
 
-                    System.out.println(date +
-                            " | HIGH VOL + CRASH → SELL at " +
-                            String.format("%.2f", price));
+                    output.append(date)
+                            .append(" | SELL at ")
+                            .append(String.format("%.2f", price))
+                            .append("\n");
                 }
             }
         }
 
         double finalValue = trader.getTotalValue(prices.get(prices.size() - 1));
-
         double initial = 1000;
         double profitPercent = ((finalValue - initial) / initial) * 100;
 
-        System.out.println("\n--- SIMULATION RESULT ---");
-        System.out.println("Total Trades: " + trades);
-        System.out.println("Final Portfolio Value: " + finalValue);
-        System.out.println("Return %: " + String.format("%.2f", profitPercent) + "%");
+        output.append("\n--- SIMULATION RESULT ---\n");
+        output.append("Total Trades: ").append(trades).append("\n");
+        output.append("Final Portfolio Value: ").append(finalValue).append("\n");
+        output.append("Return %: ")
+                .append(String.format("%.2f", profitPercent))
+                .append("%\n");
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("log", output.toString());
+        result.put("portfolio", portfolioValues);
+
+        return result;
     }
 }

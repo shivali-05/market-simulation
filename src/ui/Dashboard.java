@@ -17,23 +17,27 @@ public class Dashboard extends Application {
     @Override
     public void start(Stage stage) {
 
-        TextField stockInput = new TextField("AAPL");
+        // 🔽 Dropdown instead of TextField
+        ComboBox<String> stockDropdown = new ComboBox<>();
+        stockDropdown.getItems().addAll("AAPL", "GOOG", "MSFT", "IBM");
+        stockDropdown.setValue("AAPL");
+
         Button runBtn = new Button("Run Simulation");
 
         TextArea output = new TextArea();
         output.setPrefHeight(200);
 
-        // Graph setup
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
+
         LineChart<Number, Number> chart =
                 new LineChart<>(xAxis, yAxis);
 
-        chart.setTitle("Stock Price Trend");
+        chart.setTitle("Market Analysis");
 
         runBtn.setOnAction(e -> {
 
-            String stock = stockInput.getText();
+            String stock = stockDropdown.getValue();
 
             List<StockData> data =
                     DataLoader.load("data/stockdata.csv", stock);
@@ -55,43 +59,65 @@ public class Dashboard extends Application {
             for (int i = 1; i < data.size(); i++) {
                 double today = data.get(i).getPrice();
                 double yesterday = data.get(i - 1).getPrice();
-
                 returns.add((today - yesterday) / yesterday);
             }
 
             List<Double> vol =
                     RollingVolatilityCalculator.rollingVolatility(returns, 5);
 
-            // Run simulation
-            output.setText("");
-            Simulator.run(returns, vol, prices, dates);
+            //  NEW: Run simulation + get result
+            Map<String, Object> result =
+                    Simulator.run(returns, vol, prices, dates);
 
-            // Plot graph
+            output.setText((String) result.get("log"));
+
+            List<Double> portfolio =
+                    (List<Double>) result.get("portfolio");
+
             chart.getData().clear();
 
-            XYChart.Series<Number, Number> series =
-                    new XYChart.Series<>();
+            // 📈 Price
+            XYChart.Series<Number, Number> priceSeries = new XYChart.Series<>();
+            priceSeries.setName("Price");
 
             for (int i = 0; i < prices.size(); i++) {
-                series.getData().add(
+                priceSeries.getData().add(
                         new XYChart.Data<>(i, prices.get(i))
                 );
             }
 
-            chart.getData().add(series);
+            // 📉 Volatility
+            XYChart.Series<Number, Number> volSeries = new XYChart.Series<>();
+            volSeries.setName("Volatility");
 
-            output.appendText("\nSimulation Complete\n");
+            for (int i = 0; i < vol.size(); i++) {
+                volSeries.getData().add(
+                        new XYChart.Data<>(i, vol.get(i))
+                );
+            }
+
+            //  Portfolio
+            XYChart.Series<Number, Number> profitSeries = new XYChart.Series<>();
+            profitSeries.setName("Portfolio Value");
+
+            for (int i = 0; i < portfolio.size(); i++) {
+                profitSeries.getData().add(
+                        new XYChart.Data<>(i, portfolio.get(i))
+                );
+            }
+
+            chart.getData().addAll(priceSeries, volSeries, profitSeries);
         });
 
         VBox layout = new VBox(10,
                 new Label("Stock Symbol"),
-                stockInput,
+                stockDropdown,
                 runBtn,
                 chart,
                 output
         );
 
-        Scene scene = new Scene(layout, 800, 600);
+        Scene scene = new Scene(layout, 900, 650);
 
         stage.setTitle("Market Simulation Dashboard");
         stage.setScene(scene);
