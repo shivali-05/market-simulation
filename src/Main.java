@@ -12,9 +12,11 @@ public class Main {
 
         List<Double> returns = new ArrayList<>();
         List<Double> prices = new ArrayList<>();
+        List<String> dates = new ArrayList<>();
 
         for (StockData d : data) {
             prices.add(d.getPrice());
+            dates.add(d.getDate());
         }
 
         for (int i = 1; i < data.size(); i++) {
@@ -28,15 +30,6 @@ public class Main {
 
         List<Double> rollingVol =
                 RollingVolatilityCalculator.rollingVolatility(returns, window);
-
-        System.out.println("Rolling Volatility Calculated\n");
-
-        List<String> dates = new ArrayList<>();
-
-        for (StockData d : data) {
-            prices.add(d.getPrice());
-            dates.add(d.getDate());
-        }
 
         Simulator.run(returns, rollingVol, prices, dates);
 

@@ -8,17 +8,10 @@ public class SummaryGenerator {
 
         int spikes = 0, crashes = 0, stable = 0;
 
-        double max = Double.MIN_VALUE;
-        double min = Double.MAX_VALUE;
-
         for (double r : returns) {
-
             if (r > 0.02) spikes++;
             else if (r < -0.02) crashes++;
             else stable++;
-
-            if (r > max) max = r;
-            if (r < min) min = r;
         }
 
         System.out.println("\n--- SUMMARY ---");
@@ -26,7 +19,7 @@ public class SummaryGenerator {
         System.out.println("Spikes: " + spikes);
         System.out.println("Crashes: " + crashes);
         System.out.println("Stable: " + stable);
-        System.out.println("Max Spike: " + max);
-        System.out.println("Max Crash: " + min);
+        System.out.println("Max Spike: " + Collections.max(returns));
+        System.out.println("Max Crash: " + Collections.min(returns));
     }
 }

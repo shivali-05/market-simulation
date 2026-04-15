@@ -10,11 +10,6 @@ public class StockData {
         this.price = price;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public double getPrice() {
-        return price;
-    }
+    public String getDate() { return date; }
+    public double getPrice() { return price; }
 }

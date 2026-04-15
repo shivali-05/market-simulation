@@ -1,4 +1,5 @@
 package service;
+
 import model.StockData;
 import java.io.*;
 import java.util.*;
@@ -12,23 +13,16 @@ public class DataLoader {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
 
-            String headerLine = br.readLine();
-            String[] header = headerLine.replace("\"", "").split(",");
+            String[] header = br.readLine().replace("\"", "").split(",");
 
-            int stockIndex = -1;
-            int dateIndex = -1;
+            int stockIndex = -1, dateIndex = -1;
 
             for (int i = 0; i < header.length; i++) {
-
-                if (header[i].trim().equalsIgnoreCase(stock))
-                    stockIndex = i;
-
-                if (header[i].trim().equalsIgnoreCase("Date"))
-                    dateIndex = i;
+                if (header[i].equalsIgnoreCase(stock)) stockIndex = i;
+                if (header[i].equalsIgnoreCase("Date")) dateIndex = i;
             }
 
             String line;
-
             while ((line = br.readLine()) != null) {
 
                 String[] parts = line.replace("\"", "").split(",");
@@ -38,8 +32,6 @@ public class DataLoader {
                         Double.parseDouble(parts[stockIndex])
                 ));
             }
-
-            br.close();
 
         } catch (Exception e) {
             e.printStackTrace();
