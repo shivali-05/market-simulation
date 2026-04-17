@@ -5,3 +5,4 @@
 out/
 RUN.txt
 backend/
+.vscode/
