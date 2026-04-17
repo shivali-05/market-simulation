@@ -3,4 +3,5 @@
 .DS_Store
 .idea/
 out/
-
+RUN.txt
+backend/

@@ -32,7 +32,7 @@ public class DataLoader {
                         Double.parseDouble(parts[stockIndex])
                 ));
             }
-
+            br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
