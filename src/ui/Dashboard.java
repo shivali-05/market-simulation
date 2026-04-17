@@ -12,6 +12,8 @@ import service.*;
 
 import java.util.*;
 
+//import static jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle.summary;
+
 public class Dashboard extends Application {
 
     @Override
@@ -69,7 +71,14 @@ public class Dashboard extends Application {
             Map<String, Object> result =
                     Simulator.run(returns, vol, prices, dates);
 
-            output.setText((String) result.get("log"));
+            String summary = SummaryGenerator.generate(returns);
+            String volSummary = SummaryGenerator.volatilitySummary(vol);
+
+            output.setText(
+                    (String) result.get("log")
+                            + summary
+                            + volSummary
+            );
 
             List<Double> portfolio =
                     (List<Double>) result.get("portfolio");
@@ -107,6 +116,9 @@ public class Dashboard extends Application {
             }
 
             chart.getData().addAll(priceSeries, volSeries, profitSeries);
+
+            summary = SummaryGenerator.generate(returns);
+
         });
 
         VBox layout = new VBox(10,

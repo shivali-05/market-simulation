@@ -29,6 +29,14 @@ public class Simulator {
             String date = dates.get(i + 1);
 
             String pattern = PatternDetector.detect(r);
+            String volLabel;
+
+            if (v > 0.04)
+                volLabel = "HIGH VOL";
+            else if (v > 0.02)
+                volLabel = "MOD VOL";
+            else
+                volLabel = "LOW VOL";
 
             // track portfolio value
             portfolioValues.add(trader.getTotalValue(price));
@@ -44,7 +52,11 @@ public class Simulator {
                     trades++;
 
                     output.append(date)
-                            .append(" | BUY at ")
+                            .append(" | ")
+                            .append(volLabel)
+                            .append(" + ")
+                            .append(pattern)
+                            .append(" → BUY at ")
                             .append(String.format("%.2f", price))
                             .append("\n");
                 }
@@ -56,7 +68,11 @@ public class Simulator {
                     trades++;
 
                     output.append(date)
-                            .append(" | SELL at ")
+                            .append(" | ")
+                            .append(volLabel)
+                            .append(" + ")
+                            .append(pattern)
+                            .append(" → SELL at ")
                             .append(String.format("%.2f", price))
                             .append("\n");
                 }
